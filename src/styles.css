@@ -1,0 +1,51 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+/* @import '~@swimlane/ngx-datatable/index.css'; */
+
+
+/* @import '~@swimlane/ngx-datatable/themes/material.scss'; */
+
+
+/* @import '~@swimlane/ngx-datatable/assets/icons.css'; */
+
+@import '~ngx-toastr/toastr';
+.hass-error-message {
+    color: red;
+    margin-left: 15px !important;
+    margin-bottom: 0px !important;
+    padding-bottom: 0px !important;
+    font-size: 12.5px;
+}
+
+.item-icon {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+.overlay {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999999999;
+    top: 0px;
+    bottom: 0px;
+    left: 0;
+    width: 100%;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.logo-size {
+    width: 180px;
+}
+
+.loader1 {
+    z-index: 99999999999999999999 !important;
+}
+
+.pointer {
+    cursor: pointer !important;
+}

@@ -1,0 +1,100 @@
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <div class="page-header">
+                <h4 class="page-title">Booking Details</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table mt-3">
+                                <tbody>
+                                    <tr>
+                                        <td>Service: </td>
+                                        <td>
+                                            <span>{{booking_details?.service_details?.name | titlecase}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="booking_details?.address != null">
+                                        <td>Location: </td>
+                                        <td>
+                                            <span>{{booking_details?.address}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="details?.car_brand">
+                                        <td>Brand: </td>
+                                        <td>
+                                            <span>{{details?.car_brand}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="details?.car_model">
+                                        <td>Model: </td>
+                                        <td>
+                                            <span>{{details?.car_model}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="details?.car_manufacturing_year">
+                                        <td>Manufacturing Year: </td>
+                                        <td>
+                                            <span *ngIf="details?.car_manufacturing_year.manufacturing_year_end.length > 0">{{details?.car_manufacturing_year.manufacturing_year_start}} - {{details?.car_manufacturing_year.manufacturing_year_end}}</span>
+                                            <span *ngIf="details?.car_manufacturing_year.manufacturing_year_end.length == 0">{{details?.car_manufacturing_year.manufacturing_year_start}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="details?.registration_number">
+                                        <td>Rego No: </td>
+                                        <td>
+                                            <span>{{details?.registration_number}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="details?.house_type">
+                                        <td>House Type: </td>
+                                        <td>
+                                            <span>{{details?.house_type}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="details?.number_of_lock">
+                                        <td>Number of Lock: </td>
+                                        <td>
+                                            <span>{{details?.number_of_lock}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Date & Time: </td>
+                                        <td>
+                                            <span>{{booking_details?.date}}, {{booking_details?.time}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="booking_details?.job_note != null">
+                                        <td>Note: </td>
+                                        <td>
+                                            <span>{{booking_details?.job_note}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Price: </td>
+                                        <td>
+                                            <span>${{booking_details?.price}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Payment Method: </td>
+                                        <td>
+                                            <span>Credit/Debit Card</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>

@@ -1,0 +1,250 @@
+<app-loader class="loader1" *ngIf="showLoader"></app-loader>
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <div class="page-header">
+                <h4 class="page-title">Customers</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                <h4 class="card-title">List of all registered cutomers</h4>
+                                <button class="btn btn-primary btn-round ml-auto" (click)="openCustomerForm()">
+                                    <i class="fa fa-plus"></i>
+                                    Add Customer
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Modal -->
+                            <div class="table-responsive">
+                                <table id="basic-datatables" class="display table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Address</th>
+                                            <th>State</th>
+                                            <th>Post Code</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr *ngFor="let customer of customersList">
+
+                                            <td *ngIf="customer.name !== null" (click)="goToProfileDetails(customer.id)">
+                                                <span class="name-underline cursor-pointer">
+                                                    {{customer.name | titlecase}}
+                                                </span>
+                                            </td>
+
+                                            <td *ngIf="customer.name == null" (click)="goToProfileDetails(customer.id)">
+                                                <span class="name-underline cursor-pointer">
+                                                    NA
+                                                </span>
+                                            </td>
+
+                                            <td *ngIf="customer.email !== null">{{customer.email}}</td>
+                                            <td *ngIf="customer.email == null">NA</td>
+                                            <td *ngIf="customer.phone !== null">{{customer.phone}}</td>
+                                            <td *ngIf="customer.phone == null">NA</td>
+                                            <td *ngIf="customer.address !== null">{{customer.address}}</td>
+                                            <td *ngIf="customer.address == null">NA</td>
+                                            <td *ngIf="customer.state !== null">{{customer?.state_details?.short_name}}</td>
+                                            <td *ngIf="customer.state == null">NA</td>
+                                            <td *ngIf="customer.post_code !== null">{{customer.post_code}}</td>
+                                            <td *ngIf="customer.post_code == null">NA</td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                            <ul class="pagination custcss">
+                                <li *ngIf="current_index != 1" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="previous_pagination()">Previous</a></li>
+                                <li *ngIf="current_index == 1" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Previous</a></li>
+
+                                <li *ngFor="let page of pagination" class="page-item" [ngClass]="page.active ?  'active' : ''">
+                                    <a *ngIf="page.value < 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">{{page?.value}}</a>
+                                    <a *ngIf="page.value == 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">....</a>
+                                </li>
+
+                                <li *ngIf="current_index != pagination.length" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="next_pagination()">Next</a></li>
+                                <li *ngIf="current_index == pagination.length" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Next</a></li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<div class="overlay" *ngIf="showCustomerForm">
+    <div class="" style="margin-top: 5%;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header no-bd">
+                    <h2 class="modal-title">
+                        Add Customer
+                    </h2>
+                    <button type="button" class="close" (click)="closeCustomerForm()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <p class="small">Fill up details to add your customers manually</p>
+                    <form [formGroup]="createCustomerForm" (ngSubmit)="onSubmitCustomerForm()">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div *ngIf="createCustomerForm.controls?.name?.invalid && createCustomerForm.controls?.name?.touched">
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().name.errors.required">
+                                                        *This field is required.
+                                                    </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().name.errors.minlength">
+                                                        *Minimum 4 character.
+                                                    </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().name.errors.maxlength">
+                                                        *Maximum 60 character.
+                                                    </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().name.errors.pattern">
+                                                            *Only letters are allowed.
+                                    </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Name</label>
+                                    <input formControlName='name' name="name" type="text" class="form-control" placeholder="fill name">
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-0">
+                                <div *ngIf="createCustomerForm.controls?.email?.invalid && createCustomerForm.controls?.email?.touched">
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().email.errors.required">
+                                                                *This field is required.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().email.errors.minlength">
+                                                                *Minimum 4 character.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().email.errors.maxlength">
+                                                                *Maximum 60 character.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().email.errors.pattern">
+                                                                    *Invalid email.
+                                                                </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Email</label>
+                                    <input formControlName='email' name="email" type="text" class="form-control" placeholder="fill email">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div *ngIf="createCustomerForm.controls?.phone?.invalid && createCustomerForm.controls?.phone?.touched">
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().phone.errors.required">
+                                                                *This field is required.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().phone.errors.minlength">
+                                                                *Minimum 10 character.
+                                    </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().phone.errors.pattern">
+                                                                *Invalid phone number.
+                                                            </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Phone</label>
+                                    <input formControlName='phone' name="phone" type="text" class="form-control" placeholder="fill phone">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div *ngIf="createCustomerForm.controls?.address?.invalid && createCustomerForm.controls?.address?.touched">
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().address.errors.required">
+                                                                *This field is required.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().address.errors.minlength">
+                                                                *Minimum 2 character.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().address.errors.maxlength">
+                                                                *Maximum 80 character.
+                                                            </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Address</label>
+                                    <input formControlName='address' name="address" type="text" class="form-control" placeholder="fill address">
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-0">
+                                <div *ngIf="createCustomerForm.controls?.state?.invalid && createCustomerForm.controls?.state?.touched">
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().state.errors.required">
+                                                                *This field is required.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().state.errors.minlength">
+                                                                *Minimum 2 character.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().state.errors.maxlength">
+                                                                *Maximum 80 character.
+                                                            </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>State</label>
+                                    <select formControlName='state' name="state" type="text" class="form-control" placeholder="fill state">
+                                    <option *ngFor="let s of stateList" [value]="s.id">{{s?.short_name}}</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div *ngIf="createCustomerForm.controls?.post_code?.invalid && createCustomerForm.controls?.post_code?.touched">
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().post_code.errors.required">
+                                                                *This field is required.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().post_code.errors.minlength">
+                                                                *Minimum 2 character.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().post_code.errors.maxlength">
+                                                                *Maximum 10 character.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().post_code.errors.pattern">
+                                                                    *Invalid post code.
+                                                                </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Postcode</label>
+                                    <input formControlName='post_code' name="post_code" type="text" class="form-control" placeholder="fill postcode">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div *ngIf="createCustomerForm.controls?.password?.invalid && createCustomerForm.controls?.password?.touched">
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().password.errors.required">
+                                                *This field is required.
+                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().password.errors.minlength">
+                                                *Minimum 4 character.
+                                            </span>
+                                    <span class="hass-error-message" *ngIf="getCustomerFormErrors().password.errors.maxlength">
+                                                *Maximum 20 character.
+                                            </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Password</label>
+                                    <input type="password" formControlName='password' name="password" class="form-control" placeholder="password">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer no-bd">
+                            <button *ngIf="showAddBtn" type="submit" class="btn btn-primary" [disabled]="disableSubmitBtn()">Add</button>
+                            <button *ngIf="!showAddBtn" type="button" class="btn btn-primary" [disabled]="disableSubmitBtn()">Update</button>
+                            <button type="button" class="btn btn-danger" (click)="closeCustomerForm()">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

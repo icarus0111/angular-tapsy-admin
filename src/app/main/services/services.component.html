@@ -1,0 +1,205 @@
+<app-loader class="loader1" *ngIf="showLoader"></app-loader>
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <div class="page-header">
+                <h4 class="page-title">Services</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                <h4 class="card-title">List of all services</h4>
+                                <button class="btn btn-primary btn-round ml-auto" (click)="openServiceForm()">
+                                    <i class="fa fa-plus"></i>
+                                    Add Service
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="basic-datatables" class="display table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Service Thumbnail</th>
+                                            <th>Service Name</th>
+                                            <th>Category</th>
+                                            <th>Sub-category</th>
+                                            <th>Price</th>
+                                            <th>Price_2</th>
+                                            <th>Price_3</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let service of serviceList">
+                                            <th><img [src]="baseImageUrl+service.service_icon" class="item-icon"></th>
+                                            <td>{{service?.name | titlecase}}</td>
+                                            <td>{{service?.category_name?.name | titlecase}}</td>
+                                            <td>{{service?.sub_category?.name | titlecase}}</td>
+                                            <td>$ {{service?.price}}</td>
+                                            <td>$ {{service?.price_2}}</td>
+                                            <td>$ {{service?.price_3}}</td>
+                                            <td>
+                                                <div class="form-button-action">
+                                                    <button type="button" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task" (click)="onClickEditService(service)">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-link btn-danger" (click)="openAlert(service.id, service.category_name.id)">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <ul class="pagination custcss">
+                                <li *ngIf="current_index != 1" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="previous_pagination()">Previous</a></li>
+                                <li *ngIf="current_index == 1" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Previous</a></li>
+
+                                <li *ngFor="let page of pagination" class="page-item" [ngClass]="page.active ?  'active' : ''">
+                                    <a *ngIf="page.value < 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">{{page?.value}}</a>
+                                    <a *ngIf="page.value == 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">....</a>
+                                </li>
+
+                                <li *ngIf="current_index != pagination.length" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="next_pagination()">Next</a></li>
+                                <li *ngIf="current_index == pagination.length" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Next</a></li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<div class="overlay" *ngIf="showServiceForm">
+    <div class="" style="margin-top: 5%;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header no-bd">
+                    <h2 class="modal-title">
+                        Add Service
+                    </h2>
+                    <button type="button" (click)="closeServiceForm()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="small">Fill up details to add a new service to the system</p>
+                    <form [formGroup]="createServiceForm" (ngSubmit)="onSubmitCreateServiceForm()">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div *ngIf="getServiceFormErrors().name?.invalid && getServiceFormErrors().name?.touched">
+                                    <span class="hass-error-message" *ngIf="getServiceFormErrors().name.errors.required">
+                                                                *This field is required.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getServiceFormErrors().name.errors.minlength">
+                                                                *Minimum 4 character.
+                                                            </span>
+                                    <span class="hass-error-message" *ngIf="getServiceFormErrors().name.errors.maxlength">
+                                                                *Maximum 40 character.
+                                                            </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Name of the service</label>
+                                    <input id="addName" type="text" class="form-control" placeholder="fill name" formControlName='name' name="name">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div *ngIf="getServiceFormErrors().category_id?.invalid && getServiceFormErrors().category_id?.touched">
+                                    <span class="hass-error-message" *ngIf="getServiceFormErrors().category_id.errors.required">
+                                        *This field is required.
+                                    </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Select category</label>
+                                    <select id="addName" type="text" class="form-control" placeholder="fill name" formControlName='category_id' name="category_id" (change)="getSubCategoriesAfterChooseCategory($event)">
+                                            <option [value]=''>Select</option>
+                                            <option *ngFor="let category of categoryList" [value]="category.id">{{category.name}}</option>
+                                            </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div *ngIf="getServiceFormErrors().sub_category_id?.invalid && getServiceFormErrors().sub_category_id?.touched">
+                                    <span class="hass-error-message" *ngIf="getServiceFormErrors().sub_category_id.errors.required">
+                                        *This field is required.
+                                    </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Select sub-category</label>
+                                    <select id="addName" type="text" class="form-control" placeholder="fill name" formControlName='sub_category_id' name="sub_category_id">
+                                            <option [value]=''>Select</option>
+                                            <option *ngFor="let subCategory of subCategoryList" [value]="subCategory.id">{{subCategory.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group form-group-default">
+                                    <label>Upload service thumbnail</label>
+                                    <input id="addemail" type="file" class="form-control" placeholder="upload an icon" formControlName='service_icon' name="service_icon" (change)="fileProgress($event)">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div *ngIf="getServiceFormErrors().price?.invalid && getServiceFormErrors().price?.touched">
+                                    <span class="hass-error-message" *ngIf="getServiceFormErrors().price.errors.required">
+                                        *This field is required.
+                                    </span>
+                                </div>
+
+                                <div class="form-group form-group-default">
+                                    <label>Price (5am-8am)</label>
+                                    <input type="number" class="form-control" placeholder="fill price" formControlName='price' name="price">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div *ngIf="getServiceFormErrors().price_2?.invalid && getServiceFormErrors().price_2?.touched">
+                                    <span class="hass-error-message" *ngIf="getServiceFormErrors().price_2.errors.required">
+                                        *This field is required.
+                                    </span>
+                                </div>
+
+                                <div class="form-group form-group-default">
+                                    <label>Price (8am-4pm)</label>
+                                    <input type="number" class="form-control" placeholder="fill price" formControlName='price_2' name="price_2">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div *ngIf="getServiceFormErrors().price_3?.invalid && getServiceFormErrors().price_3?.touched">
+                                    <span class="hass-error-message" *ngIf="getServiceFormErrors().price_3.errors.required">
+                                        *This field is required.
+                                    </span>
+                                </div>
+
+                                <div class="form-group form-group-default">
+                                    <label>Price (4pm-8pm)</label>
+                                    <input type="number" class="form-control" placeholder="fill price" formControlName='price_3' name="price_3">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer no-bd">
+                            <button type="submit" *ngIf="showAddBtn" class="btn btn-primary" [disabled]="disableSubmitBtn()">Add</button>
+                            <button type="button" *ngIf="!showAddBtn" class="btn btn-primary" [disabled]="disableSubmitBtn()" (click)="onSubmitupdateServiceForm()">Update</button>
+                            <button type="button" class="btn btn-danger" (click)="closeServiceForm()">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

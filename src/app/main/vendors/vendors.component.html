@@ -1,0 +1,372 @@
+<app-loader class="loader1" *ngIf="showLoader"></app-loader>
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <div class="page-header">
+                <h4 class="page-title">Vendors</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                <h4 class="card-title">List of all registered vendors</h4>
+                                <button class="btn btn-primary btn-round ml-auto" (click)="openVendorForm()">
+                                    <i class="fa fa-plus"></i> Add Vendor
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <section id="tabs" class="project-tab">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <nav>
+                                                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Approved</a>
+                                                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Not Approved</a>
+                                                </div>
+                                            </nav>
+                                            <div class="tab-content" id="nav-tabContent">
+                                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                                    <div class="table-responsive">
+                                                        <table datatable class="table" id="basic-datatables">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Email</th>
+                                                                    <th>Phone</th>
+                                                                    <th>Address</th>
+                                                                    <th>State</th>
+                                                                    <th>Post Code</th>
+                                                                    <th>Service</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let vendor of approvedVendors">
+
+                                                                    <td *ngIf="vendor.name !== null" [routerLink]="['/vendor-details/'+vendor.id]" class="cursor-pointer">
+                                                                        {{vendor.name}}
+                                                                    </td>
+
+                                                                    <td *ngIf="vendor.email !== null">{{vendor.email}}</td>
+                                                                    <td *ngIf="vendor.email == null">NA</td>
+                                                                    <td *ngIf="vendor.phone !== null">{{vendor.phone}}</td>
+                                                                    <td *ngIf="vendor.phone == null">NA</td>
+                                                                    <td *ngIf="vendor.address !== null">{{vendor.address}}</td>
+                                                                    <td *ngIf="vendor.address == null">NA</td>
+                                                                    <td *ngIf="vendor.state_details !== null">{{vendor.state_details.short_name}}</td>
+                                                                    <td *ngIf="vendor.state_details == null">NA</td>
+                                                                    <td *ngIf="vendor.post_code !== null">{{vendor.post_code}}</td>
+                                                                    <td *ngIf="vendor.post_code == null">NA</td>
+                                                                    <td *ngIf="vendor.category_details !== null">{{vendor.category_details.name}}</td>
+                                                                    <td *ngIf="vendor.category_details == null">NA</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <ul class="pagination custcss">
+                                                        <li *ngIf="current_index != 1" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="previous_pagination()">Previous</a></li>
+                                                        <li *ngIf="current_index == 1" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Previous</a></li>
+
+                                                        <li *ngFor="let page of pagination" class="page-item" [ngClass]="page.active ?  'active' : ''">
+                                                            <a *ngIf="page.value < 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">{{page?.value}}</a>
+                                                            <a *ngIf="page.value == 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">....</a>
+                                                        </li>
+
+                                                        <li *ngIf="current_index != pagination.length" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="next_pagination()">Next</a></li>
+                                                        <li *ngIf="current_index == pagination.length" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Next</a></li>
+                                                    </ul>
+
+                                                </div>
+                                                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                                    <div class="table-responsive">
+                                                        <table datatable class="table" id="basic-datatables">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Email</th>
+                                                                    <th>Phone</th>
+                                                                    <th>Address</th>
+                                                                    <th>State</th>
+                                                                    <th>Post Code</th>
+                                                                    <th>Service</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let vendor of notApprovedVendors">
+
+                                                                    <td *ngIf="vendor.name !== null" [routerLink]="['/vendor-details/'+vendor.id]" class="cursor-pointer">
+                                                                        {{vendor?.name | titlecase}}
+                                                                    </td>
+
+                                                                    <td *ngIf="vendor.email !== null">{{vendor?.email}}</td>
+                                                                    <td *ngIf="vendor.email == null">NA</td>
+                                                                    <td *ngIf="vendor.phone !== null">{{vendor?.phone}}</td>
+                                                                    <td *ngIf="vendor.phone == null">NA</td>
+                                                                    <td *ngIf="vendor.address !== null">{{vendor?.address}}</td>
+                                                                    <td *ngIf="vendor.address == null">NA</td>
+                                                                    <td *ngIf="vendor.state_details !== null">{{vendor?.state_details?.short_name}}</td>
+                                                                    <td *ngIf="vendor.state_details == null">NA</td>
+                                                                    <td *ngIf="vendor.post_code !== null">{{vendor?.post_code}}</td>
+                                                                    <td *ngIf="vendor.post_code == null">NA</td>
+                                                                    <td *ngIf="vendor.category_details !== null">{{vendor?.category_details?.name | titlecase}}</td>
+                                                                    <td *ngIf="vendor.category_details == null">NA</td>
+                                                                    <td>
+                                                                        <button (click)="approveVendor(vendor.id)" class="btn btn-primary btn-round ml-auto">
+                                                                            Approve
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <ul class="pagination custcss">
+                                                        <li *ngIf="current_index2 != 1" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="previous_pagination2()">Previous</a></li>
+                                                        <li *ngIf="current_index2 == 1" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Previous</a></li>
+
+                                                        <li *ngFor="let page of pagination2" class="page-item" [ngClass]="page.active ?  'active' : ''">
+                                                            <a *ngIf="page.value < 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">{{page?.value}}</a>
+                                                            <a *ngIf="page.value == 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">....</a>
+                                                        </li>
+
+                                                        <li *ngIf="current_index2 != pagination2.length" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="next_pagination2()">Next</a></li>
+                                                        <li *ngIf="current_index2 == pagination2.length" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Next</a></li>
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Modal -->
+                            <!-- class="display table table-striped table-hover" -->
+                            <!-- <div class="table-responsive">
+                                <table datatable class="row-border hover" id="basic-datatables">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Address</th>
+                                            <th>State</th>
+                                            <th>Post Code</th>
+                                            <th>Service</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let vendor of vendorList">
+
+                                            <td *ngIf="vendor.name !== null" [routerLink]="['/vendor-details/'+vendor.id]" class="cursor-pointer">
+                                                {{vendor.name}}
+                                            </td>
+
+                                            <td *ngIf="vendor.email !== null">{{vendor.email}}</td>
+                                            <td *ngIf="vendor.email == null">NA</td>
+                                            <td *ngIf="vendor.phone !== null">{{vendor.phone}}</td>
+                                            <td *ngIf="vendor.phone == null">NA</td>
+                                            <td *ngIf="vendor.address !== null">{{vendor.address}}</td>
+                                            <td *ngIf="vendor.address == null">NA</td>
+                                            <td *ngIf="vendor.state_details !== null">{{vendor.state_details.short_name}}</td>
+                                            <td *ngIf="vendor.state_details == null">NA</td>
+                                            <td *ngIf="vendor.post_code !== null">{{vendor.post_code}}</td>
+                                            <td *ngIf="vendor.post_code == null">NA</td>
+                                            <td *ngIf="vendor.category_details !== null">{{vendor.category_details.name}}</td>
+                                            <td *ngIf="vendor.category_details == null">NA</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- End Custom template -->
+</div>
+
+
+
+
+
+<div class="overlay" *ngIf="showVendorForm">
+    <div class="">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header no-bd">
+                    <h2 class="modal-title">
+                        Add vendor
+                    </h2>
+                    <button type="button" class="close" (click)="closeVendorForm()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <p class="small">Fill up details to add your vendors manually</p>
+                    <form [formGroup]="createVendorForm" (ngSubmit)="onSubmitVendorForm()">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div *ngIf="createVendorForm.controls?.name?.invalid && createVendorForm.controls?.name?.touched">
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().name.errors.required">
+                                                            *This field is required.
+                                                        </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().name.errors.minlength">
+                                                            *Minimum 4 character.
+                                                        </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().name.errors.maxlength">
+                                                            *Maximum 60 character.
+                                                        </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().name.errors.pattern">
+                                                                *Only letters are allowed.
+                                        </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Name</label>
+                                    <input formControlName='name' name="name" type="text" class="form-control" placeholder="fill name">
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-0">
+                                <div *ngIf="createVendorForm.controls?.email?.invalid && createVendorForm.controls?.email?.touched">
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().email.errors.required">
+                                                                    *This field is required.
+                                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().email.errors.minlength">
+                                                                    *Minimum 4 character.
+                                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().email.errors.maxlength">
+                                                                    *Maximum 60 character.
+                                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().email.errors.pattern">
+                                                                        *Invalid email.
+                                                                    </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Email</label>
+                                    <input formControlName='email' name="email" type="text" class="form-control" placeholder="fill email">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div *ngIf="createVendorForm.controls?.phone?.invalid && createVendorForm.controls?.phone?.touched">
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().phone.errors.required">
+                                                                    *This field is required.
+                                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().phone.errors.minlength">
+                                                                    *Minimum 10 character.
+                                        </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().phone.errors.pattern">
+                                                                    *Invalid phone number.
+                                                                </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Phone</label>
+                                    <input formControlName='phone' name="phone" type="text" class="form-control" placeholder="fill phone">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div *ngIf="createVendorForm.controls?.address?.invalid && createVendorForm.controls?.address?.touched">
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().address.errors.required">
+                                                                    *This field is required.
+                                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().address.errors.minlength">
+                                                                    *Minimum 2 character.
+                                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().address.errors.maxlength">
+                                                                    *Maximum 80 character.
+                                                                </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Address</label>
+                                    <input formControlName='address' name="address" type="text" class="form-control" placeholder="fill address">
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-0">
+                                <div *ngIf="createVendorForm.controls?.state?.invalid && createVendorForm.controls?.state?.touched">
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().state.errors.required">
+                                                                    *This field is required.
+                                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().state.errors.minlength">
+                                                                    *Minimum 2 character.
+                                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().state.errors.maxlength">
+                                                                    *Maximum 80 character.
+                                                                </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>State</label>
+                                    <select formControlName='state' name="state" type="text" class="form-control" placeholder="fill state">
+                                    <option *ngFor="let state of stateList" [value]="state.id">{{state?.short_name}}</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div *ngIf="createVendorForm.controls?.post_code?.invalid && createVendorForm.controls?.post_code?.touched">
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().post_code.errors.required">
+                                                                    *This field is required.
+                                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().post_code.errors.minlength">
+                                                                    *Minimum 2 character.
+                                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().post_code.errors.maxlength">
+                                                                    *Maximum 10 character.
+                                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().post_code.errors.pattern">
+                                                                        *Invalid post code.
+                                                                    </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Postcode</label>
+                                    <input formControlName='post_code' name="post_code" type="text" class="form-control" placeholder="fill postcode">
+                                </div>
+                            </div>
+                            <div class="col-md-12 pr-0">
+                                <div *ngIf="createVendorForm.controls?.category_id?.invalid && createVendorForm.controls?.category_id?.touched">
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().category_id.errors.required">
+                                        *This field is required.
+                                    </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Service</label>
+                                    <select formControlName='category_id' name="category_id" type="text" class="form-control" placeholder="fill state">
+                                            <option [value]='null'>Select</option>
+                                            <option *ngFor="let category of categoryList" [value]="category.id">{{category.name}}</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div *ngIf="createVendorForm.controls?.password?.invalid && createVendorForm.controls?.password?.touched">
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().password.errors.required">
+                                                    *This field is required.
+                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().password.errors.minlength">
+                                                    *Minimum 4 character.
+                                                </span>
+                                    <span class="hass-error-message" *ngIf="getVendorFormErrors().password.errors.maxlength">
+                                                    *Maximum 20 character.
+                                                </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Password</label>
+                                    <input type="password" formControlName='password' name="password" class="form-control" placeholder="password">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer no-bd">
+                            <button *ngIf="showAddBtn" type="submit" class="btn btn-primary" [disabled]="disableSubmitBtn()">Add</button>
+                            <button *ngIf="!showAddBtn" type="button" class="btn btn-primary" [disabled]="disableSubmitBtn()" (click)="onSubmitUpdateVendorForm()">Update</button>
+                            <button type="button" class="btn btn-danger" (click)="closeVendorForm()">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

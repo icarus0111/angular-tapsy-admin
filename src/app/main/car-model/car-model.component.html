@@ -1,0 +1,190 @@
+<app-loader class="loader1" *ngIf="showLoader"></app-loader>
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <div class="page-header">
+                <h4 class="page-title">Car Model</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                <h4 class="card-title">List of all Car Model</h4>
+                                <button class="btn btn-primary btn-round ml-auto" (click)="openSubCategoryForm()">
+                                    <i class="fa fa-plus"></i>
+                                    Add Car Model
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Modal -->
+
+                            <div class="table-responsive">
+                                <table id="basic-datatables" class="display table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Model Banner</th>
+                                            <th>Model Name</th>
+                                            <th>Brand</th>
+                                            <th>KD Compatibility</th>
+                                            <th>Start Year</th>
+                                            <th>End Year</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let subCategory of subCategoryList">
+                                            <th><img [src]="baseImageUrl+subCategory.image" class="item-icon" /></th>
+                                            <td>{{subCategory?.name | titlecase}}</td>
+                                            <td>{{subCategory?.brand_details.name | titlecase}}</td>
+                                            <td *ngIf="subCategory.kd_compatibility == 1">YES</td>
+                                            <td *ngIf="subCategory.kd_compatibility == 0">NO</td>
+                                            <td>{{subCategory?.start_year}}</td>
+                                            <td>{{subCategory?.end_year}}</td>
+                                            <td>
+                                                <div class="form-button-action">
+                                                    <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task" (click)="onClickEditSubCategory(subCategory)">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-link btn-danger" (click)="openAlert(subCategory.id)">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <ul class="pagination custcss">
+                                <li *ngIf="current_index != 1" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="previous_pagination()">Previous</a></li>
+                                <li *ngIf="current_index == 1" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Previous</a></li>
+
+                                <li *ngFor="let page of pagination" class="page-item" [ngClass]="page.active ?  'active' : ''">
+                                    <a *ngIf="page.value < 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">{{page?.value}}</a>
+                                    <a *ngIf="page.value == 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">....</a>
+                                </li>
+
+                                <li *ngIf="current_index != pagination.length" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="next_pagination()">Next</a></li>
+                                <li *ngIf="current_index == pagination.length" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Next</a></li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="overlay" *ngIf="showSubCategoryForm">
+    <div class="" style="margin-top: 0px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header no-bd">
+                    <h2 class="modal-title">
+                        Add Car Model
+                    </h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeSubCategoryForm()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                </div>
+                <div class="modal-body">
+                    <p class="small">Fill up details to add a new car model to the system</p>
+                    <form [formGroup]="createSubCategoryForm" (ngSubmit)="onSubmitCreateSubCategoryForm()">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div *ngIf="getSubCategoryFormErrors().name?.invalid && getSubCategoryFormErrors().name?.touched">
+                                    <span class="hass-error-message" *ngIf="getSubCategoryFormErrors().name.errors.required">
+                                                        *This field is required.
+                                                    </span>
+                                    <span class="hass-error-message" *ngIf="getSubCategoryFormErrors().name.errors.minlength">
+                                                        *Minimum 4 character.
+                                                    </span>
+                                    <span class="hass-error-message" *ngIf="getSubCategoryFormErrors().name.errors.maxlength">
+                                                        *Maximum 40 character.
+                                                    </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Name of the Model</label>
+                                    <input id="addName" type="text" class="form-control" placeholder="fill name" formControlName='name' name="name">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div *ngIf="getSubCategoryFormErrors().brand_id?.invalid && getSubCategoryFormErrors().brand_id?.touched">
+                                    <span class="hass-error-message" *ngIf="getSubCategoryFormErrors().brand_id.errors.required">
+                                        *This field is required.
+                                    </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Select Brand</label>
+                                    <select id="addName" type="text" class="form-control" placeholder="fill name" formControlName='brand_id' name="brand_id">
+                                        <option value=''>Select</option>
+                                        <option *ngFor="let category of categoryList" [value]="category.id">{{category.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div *ngIf="getSubCategoryFormErrors().kd_compatibility?.invalid && getSubCategoryFormErrors().kd_compatibility?.touched">
+                                    <span class="hass-error-message" *ngIf="getSubCategoryFormErrors().kd_compatibility.errors.required">
+                                        *This field is required.
+                                    </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>KD Compatibility</label>
+                                    <select id="addName" type="text" class="form-control" placeholder="fill name" formControlName='kd_compatibility' name="kd_compatibility">
+                                        <option value=''>Select</option>
+                                        <option value="1">YES</option>
+                                        <option value="0">NO</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div *ngIf="getSubCategoryFormErrors().start_year?.invalid && getSubCategoryFormErrors().start_year?.touched">
+                                    <span class="hass-error-message" *ngIf="getSubCategoryFormErrors().start_year.errors.required">
+                                        *This field is required.
+                                    </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>Start Year</label>
+                                    <input (keyup)="onMobileNumberType($event)" id="addemail" type="text" class="form-control" placeholder="start year" formControlName='start_year' name="start_year" maxlength="4">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div *ngIf="getSubCategoryFormErrors().end_year?.invalid && getSubCategoryFormErrors().end_year?.touched">
+                                    <span class="hass-error-message" *ngIf="getSubCategoryFormErrors().end_year.errors.required">
+                                        *This field is required.
+                                    </span>
+                                </div>
+                                <div class="form-group form-group-default">
+                                    <label>End Year</label>
+                                    <input (keyup)="onMobileNumberType2($event)" id="addemail" type="text" class="form-control" placeholder="end year" formControlName='end_year' name="end_year" maxlength="4">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group form-group-default">
+                                    <label>Upload Model Banner</label>
+                                    <input id="addemail" type="file" class="form-control" placeholder="upload an icon" (change)="fileProgress($event)">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer no-bd">
+                            <button type="submit" *ngIf="showAddBtn" class="btn btn-primary" [disabled]="disableSubmitBtn()">Add</button>
+                            <button *ngIf="!showAddBtn" type="button" class="btn btn-primary" [disabled]="disableSubmitBtn()" (click)="onSubmitupdateSubCategoryForm()">Update</button>
+                            <button type="button" class="btn btn-danger" (click)="closeSubCategoryForm()">Close</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+<app-loader class="loader1" *ngIf="showLoader"></app-loader>
+
+
+<div class="main-panel">
+    <div class="content">
+        <div class="page-inner">
+            <div class="page-header">
+                <h4 class="page-title">Jobs</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                <h4 class="card-title">List of all jobs</h4>
+                                <!-- <button class="btn btn-primary btn-round ml-auto">
+                                    Export XLS
+                                </button> -->
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="basic-datatables" class="display table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Job ID</th>
+                                            <th>Service</th>
+                                            <th>Category</th>
+                                            <th>Sub-category</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let job of allJobList">
+                                            <th>{{job?.id}}</th>
+                                            <td>{{job?.service_details?.name | titlecase}}</td>
+                                            <td>{{job?.service_details?.category_name?.name | titlecase}}</td>
+                                            <td>{{job?.service_details?.sub_category?.name | titlecase}}</td>
+                                            <td>${{job?.price}}</td>
+                                            <td>
+                                                <div class="form-button-action" (click)="onClickViewJob(job.id)">
+                                                    <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="View Details">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <ul class="pagination custcss">
+                                <li *ngIf="current_index != 1" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="previous_pagination()">Previous</a></li>
+                                <li *ngIf="current_index == 1" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Previous</a></li>
+
+                                <li *ngFor="let page of pagination" class="page-item" [ngClass]="page.active ?  'active' : ''">
+                                    <a *ngIf="page.value < 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">{{page?.value}}</a>
+                                    <a *ngIf="page.value == 11" class="page-link" href="JavaScript:void(0);" (click)="current_pagination(page?.value)">....</a>
+                                </li>
+
+                                <li *ngIf="current_index != pagination.length" class="page-item"><a class="page-link" href="JavaScript:void(0);" (click)="next_pagination()">Next</a></li>
+                                <li *ngIf="current_index == pagination.length" class="page-item disable"><a class="page-link" href="JavaScript:void(0);">Next</a></li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
